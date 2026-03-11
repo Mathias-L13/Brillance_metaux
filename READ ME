@@ -1,0 +1,10 @@
+Extraction : prend les dossiers fits, extrait les différents patchs, les regroupent et les sauvegardent dans un dossier
+
+Pre_traitement: soustrait le courant d'obscurité, et utilise le champ plat
+
+Traitement: Effectue une moyenne spatial sur chaque patch à t, avec l'écart type
+
+Courbe: affiche la courbe de la moyenne en fonction du temps pour chaque patch,
+affiche le maximum/Largeur à mi hauteur temporelle en fonction du patch.
+
+Gloss: applique un étalonage à l'image et renvoie une valeur de brillance pour l'objet (ou plusieurs)
