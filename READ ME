@@ -4,6 +4,8 @@ Pre_traitement: soustrait le courant d'obscurité, et utilise le champ plat
 
 Traitement: Effectue une moyenne spatial sur chaque patch à t, avec l'écart type
 
+Interface_pointage:  crée par Claude, semble bien fonction bien. 
+
 Courbe: affiche la courbe de la moyenne en fonction du temps pour chaque patch,
 affiche le maximum/Largeur à mi hauteur temporelle en fonction du patch.
 
