@@ -31,7 +31,7 @@ def extraire_zone(image: np.ndarray, cx: int, cy: int, largeur: int) -> np.ndarr
     return image[y1:y2, x1:x2].copy()
 
 
-def Extraction(folder, sauvegarde=True):
+def Extraction(folder,Gloss, sauvegarde=True):
     Chemin = Path(folder) / "extrait"
     Chemin.mkdir(parents=True, exist_ok=True)
 
@@ -41,7 +41,7 @@ def Extraction(folder, sauvegarde=True):
             if f.is_file():
                 f.unlink()
 
-        result = interface(Path(folder))
+        result = interface(Path(folder),Gloss)
 
         if result is None:
             print("Annulé.")
