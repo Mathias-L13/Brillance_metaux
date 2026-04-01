@@ -1,6 +1,8 @@
 from pathlib import Path
 import numpy as np
 import os
+
+
 def pre_traitement(Dossier):
     Chemin = Path(Dossier) / "extrait"
     data = {}
