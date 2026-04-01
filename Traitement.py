@@ -6,6 +6,7 @@ def traitement(Patchs):
     Ecart_type_Patchs= []        # Idem
     Valeur_moyenne_max=[]                    # dimension (Nombre de patch)
     Largeur_mi_hauteur=[]
+    Aire_sous_courbes=[]
     #On filtre par prefixe
 
     prefixe="tableau"
@@ -22,12 +23,13 @@ def traitement(Patchs):
         Moyenne_Patchs.append(moyenne_patch)
         Ecart_type_Patchs.append(ecart_type_patch)
         Valeur_moyenne_max.append(np.max(np.array(moyenne_patch)))
-        Largeur_mi_hauteur.append(fwhm(moyenne_patch))
+        Largeur_mi_hauteur.append(fwhm(moyenne_patch)/np.max(np.array(moyenne_patch)))
+        Aire_sous_courbes.append(np.sum(moyenne_patch)/np.max(np.array(moyenne_patch)))
     Evolution_patchs["Moyennes_Patchs"]=Moyenne_Patchs
     Evolution_patchs["Ecart_types_Patchs"]=Ecart_type_Patchs
     Evolution_patchs["Valeur_moyenne_max"]=Valeur_moyenne_max
     Evolution_patchs["Largeur_mi_hauteur"]=Largeur_mi_hauteur
-
+    Evolution_patchs["Aire_sous_courbes"]=Aire_sous_courbes
     return Evolution_patchs
 
 def fwhm(y):
