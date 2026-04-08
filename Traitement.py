@@ -1,14 +1,14 @@
 import numpy as np
 
-def traitement(Patchs):
+def traitement(Patchs,gloss):
     Evolution_patchs={} #Stocks les valeurs moyennes, noms, écart type,...
     Moyenne_Patchs= []           # dimension (Nombre de patch,nombre de valeur temporelle par patchs)
     Ecart_type_Patchs= []        # Idem
     Valeur_moyenne_max=[]                    # dimension (Nombre de patch)
     Largeur_mi_hauteur=[]
     Aire_sous_courbes=[]
-    #On filtre par prefixe
 
+    #On filtre par prefixe
     prefixe="tableau"
     valeurs = [v for k, v in Patchs.items() if k.startswith(prefixe)]
     cles = [k for k in Patchs if k.startswith(prefixe)]
@@ -25,11 +25,32 @@ def traitement(Patchs):
         Valeur_moyenne_max.append(np.max(np.array(moyenne_patch)))
         Largeur_mi_hauteur.append(fwhm(moyenne_patch)/np.max(np.array(moyenne_patch)))
         Aire_sous_courbes.append(np.sum(moyenne_patch)/np.max(np.array(moyenne_patch)))
+
     Evolution_patchs["Moyennes_Patchs"]=Moyenne_Patchs
     Evolution_patchs["Ecart_types_Patchs"]=Ecart_type_Patchs
     Evolution_patchs["Valeur_moyenne_max"]=Valeur_moyenne_max
     Evolution_patchs["Largeur_mi_hauteur"]=Largeur_mi_hauteur
-    Evolution_patchs["Aire_sous_courbes"]=Aire_sous_courbes
+    Evolution_patchs["Aire_sous_courbes"] =Aire_sous_courbes
+
+    #Calcul des coefficients de regression linéaire: FWHM
+    log_x = np.log(gloss)
+    log_y = np.log(Largeur_mi_hauteur)
+    # régression linéaire sur les log
+    coeffs = np.polyfit(log_x, log_y, deg=1)
+    Evolution_patchs["Regression_Largeur_mi_hauteur"] =coeffs[0:2] 
+
+    #Calcul des coefficients de regression linéaire: valeur maximale
+
+    log_y = np.log(Valeur_moyenne_max)
+    # régression linéaire sur les log
+    coeffs = np.polyfit(log_x, log_y, deg=1)
+    Evolution_patchs["Regression_valeur_maximale"] =coeffs[0:2]  
+
+    #Calcul des coefficients de regression linéaire: aire sous courbe
+    log_y = np.log(Aire_sous_courbes)
+    # régression linéaire sur les log
+    coeffs = np.polyfit(log_x, log_y, deg=1)
+    Evolution_patchs["Regression_aire_sous_courbes"] =coeffs[0:2]  
     return Evolution_patchs
 
 def fwhm(y):
