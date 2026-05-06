@@ -142,7 +142,7 @@ class FitsInterface:
         ctrl_f = tk.Frame(side_r, bg=BG2, pady=10)
         ctrl_f.pack(fill="x")
         tk.Label(ctrl_f, text="Taille aperçu :", fg=TEXT2, bg=BG2, font=FONT_S).pack()
-        self.size_var = tk.IntVar(value=60)
+        self.size_var = tk.IntVar(value=20)
         tk.Spinbox(ctrl_f, from_=20, to=200, textvariable=self.size_var,
                    command=self.update_thumbnails, bg=BG3, fg=TEXT).pack()
  
@@ -471,7 +471,9 @@ class FitsInterface:
             "largeur": self.size_var.get(),
             # Liste d'objets — liste vide si aucun sélectionné
             "objects": [{"center": p, "largeur": self.size_var.get()}
-                        for p in self.object_points]
+                        for p in self.object_points],
+            # Nombre d'objets sélectionnés
+            "Nombre_objets" : len(self.object_points)                    
         }
         self.root.destroy()
  

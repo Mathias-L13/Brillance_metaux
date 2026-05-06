@@ -46,10 +46,11 @@ def Extraction(folder,Gloss, sauvegarde=True):
         if result is None:
             print("Annulé.")
             return
-        N       = result["N"]           # nombre de points
-        points  = result["points"]      # [(x1,y1), ..., (xN,yN)]
-        largeur = result["largeur"]     # taille des cadres
-
+        N       = result["N"]             # nombre de points
+        points  = result["points"]        # [(x1,y1), ..., (xN,yN)]
+        largeur = result["largeur"]       # taille des cadres
+        objects = result["objects"]       #contient une liste d'objets
+        Nb_obj  = result["Nombre_objets"] #contient le nombre d'objets
         # Liste de tous les fichiers .fit dans folder
         fits_files = sorted(
             [f for f in Path(folder).iterdir()
@@ -60,21 +61,30 @@ def Extraction(folder,Gloss, sauvegarde=True):
         # ── Construction des N tableaux de shape (M, largeur, largeur) ──
         # tableaux[i] contient les M extraits centrés sur le point i
         tableaux = [np.zeros((M, largeur, largeur), dtype=float) for _ in range(N)]
-
+        tableaux_objets = [np.zeros((M, largeur, largeur), dtype=float) for _ in range(Nb_obj)]
         for m, fichier in enumerate(fits_files):
             print(f"  [{m+1}/{M}] Traitement de {fichier.name}...")
             image = load_fits_raw(fichier)
 
             for i, (cx, cy) in enumerate(points):
                 tableaux[i][m] = extraire_zone(image, cx, cy, largeur)
+            for i in range(Nb_obj):
+                objet_i=objects[i]
+                c_obj_i=objet_i["center"]
+                largeur_obj_i=objet_i["largeur"]
+                tableaux_objets[i][m] = extraire_zone(image,c_obj_i[0],c_obj_i[1],largeur_obj_i )
 
         # ── Sauvegarde ──────────────────────────────────────────────────
         if sauvegarde:
             for i, tableau in enumerate(tableaux):
                 chemin_npy = Chemin / f"tableau_{i+1:02d}.npy"
                 np.save(chemin_npy, tableau)
+                print(f"  Sauvegardé : {chemin_npy}  shape={tableau.shape}")        
+            for i, tableau in enumerate(tableaux_objets):
+                chemin_npy = Chemin / f"tableau_objet_{i+1:02d}.npy"
+                np.save(chemin_npy, tableau)
                 print(f"  Sauvegardé : {chemin_npy}  shape={tableau.shape}")
-
         print(f"\nExtraction terminée — {N} tableaux de shape ({M}, {largeur}, {largeur})")
-        return tableaux
+        print(f"\nExtraction terminée — {Nb_obj} tableaux de shape ({M}, {largeur}, {largeur})")
+        return tableaux,tableaux_objets
 
